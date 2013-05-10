@@ -1,0 +1,73 @@
+worker_processes  1;
+error_log stderr notice;
+daemon off;
+env LAPIS_ENVIRONMENT;
+
+events {
+  worker_connections 16384;
+}
+
+http {
+  include mime.types;
+
+  proxy_temp_path /tmp/openresty/proxy_temp 1 2;
+  client_body_temp_path /tmp/openresty/client_body_temp 1 2;
+  fastcgi_temp_path /tmp/openresty/fastcgi_temp 1 2;
+  scgi_temp_path /tmp/openresty/scgi_temp 1 2;
+  uwsgi_temp_path /tmp/openresty/uwsgi_temp 1 2;
+
+  upstream database {
+    postgres_server 127.0.0.1 dbname=techempower user=pascal password=;
+  }
+
+  server {
+    listen 8080;
+    # lua_code_cache off;
+
+    location /luainfo {
+      content_by_lua '
+        ngx.header.content_type = "application/json"
+        local cjson = require("cjson")
+        local encode = cjson.encode
+
+        local info = {
+          jit = (jit and jit.version or false)
+        }
+
+        ngx.print( encode(info) )
+      ';
+    }
+
+    location /json2 {
+      default_type application/json;
+      content_by_lua '
+        local cjson = require("cjson")
+        local encode = cjson.encode
+
+        local resp = {message = "Hello, World!"}
+
+        ngx.print( encode(resp) )
+      ';
+    }
+
+    location / {
+      default_type text/html;
+      set $_url "";
+      content_by_lua_file "web.lua";
+    }
+
+    location = /query {
+      internal;
+      postgres_pass database;
+      postgres_query $echo_request_body;
+    }
+
+    location /static/ {
+      alias static/;
+    }
+
+    location /favicon.ico {
+      alias static/favicon.ico;
+    }
+  }
+}

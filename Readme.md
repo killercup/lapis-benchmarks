@@ -2,9 +2,9 @@
 
 ## Setup
 
-You need to install on [lapis](http://leafo.net/lapis/), of course.
+You need to install [lapis](http://leafo.net/lapis/), of course.
 
-```shell
+```sh
 $ moon **.moon
 $ lapis server
 ```
