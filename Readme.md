@@ -15,12 +15,7 @@ For development, you may want to set `lua_code_cache off` in `nginx.conf`.
 
 Specify your Postgres connection in `config.moon`.
 
-First two tests expect table `World` to exist:
-
-```sql
-CREATE TABLE World (id BIGSERIAL PRIMARY KEY, randomNumber INT);
-INSERT INTO world VALUES (generate_series(1,10000), (random() * 99999999)::INTEGER);
-```
+Load inital DB content with `psql techempower < create-postgres.sql` (assuming your DB is called 'techempower').
 
 ## URLs
 
