@@ -44,6 +44,44 @@ do
   end
   World = _class_0
 end
+local Fortune
+do
+  local _parent_0 = Model
+  local _base_0 = { }
+  _base_0.__index = _base_0
+  if _parent_0 then
+    setmetatable(_base_0, _parent_0.__base)
+  end
+  local _class_0 = setmetatable({
+    __init = function(self, ...)
+      if _parent_0 then
+        return _parent_0.__init(self, ...)
+      end
+    end,
+    __base = _base_0,
+    __name = "Fortune",
+    __parent = _parent_0
+  }, {
+    __index = function(cls, name)
+      local val = rawget(_base_0, name)
+      if val == nil and _parent_0 then
+        return _parent_0[name]
+      else
+        return val
+      end
+    end,
+    __call = function(cls, ...)
+      local _self_0 = setmetatable({}, _base_0)
+      cls.__init(_self_0, ...)
+      return _self_0
+    end
+  })
+  _base_0.__class = _class_0
+  if _parent_0 and _parent_0.__inherited then
+    _parent_0.__inherited(_parent_0, _class_0)
+  end
+  Fortune = _class_0
+end
 do
   local _parent_0 = lapis.Application
   local _base_0 = {
@@ -90,6 +128,40 @@ do
       return {
         json = w
       }
+    end,
+    [{
+      test4 = "/fortunes"
+    }] = function(self)
+      self.page_title = "Fortunes"
+      local db = require("lapis.db")
+      local fortunes, err = Fortune:select("*")
+      table.insert(fortunes, {
+        id = -1,
+        message = "The answer, of course, is 42."
+      })
+      table.sort(fortunes, (function(a, b)
+        return a.message < b.message
+      end))
+      if self.params.json then
+        return {
+          json = fortunes
+        }
+      end
+      return self:html(function()
+        h1("Fortunes")
+        return element("table", function()
+          element("tr", function()
+            element("th", "ID")
+            return element("th", "Message")
+          end)
+          for i, f in pairs(fortunes) do
+            element("tr", function()
+              element("td", f.id)
+              return element("td", f.message)
+            end)
+          end
+        end)
+      end)
     end
   }
   _base_0.__index = _base_0
