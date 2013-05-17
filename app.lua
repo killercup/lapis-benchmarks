@@ -162,6 +162,33 @@ do
           end
         end)
       end)
+    end,
+    [{
+      test5 = "/updates"
+    }] = function(self)
+      local queries = tonumber(self.params.queries)
+      if queries ~= nil then
+        if queries < 1 then
+          queries = 1
+        end
+        if queries > 500 then
+          queries = 500
+        end
+      else
+        queries = 1
+      end
+      local w = { }
+      for i = 1, queries do
+        w[i] = World:find({
+          id = math.random(1, 10000)
+        })
+        w[i]:update({
+          randomnumber = math.random(1, 10000)
+        })
+      end
+      return {
+        json = w
+      }
     end
   }
   _base_0.__index = _base_0

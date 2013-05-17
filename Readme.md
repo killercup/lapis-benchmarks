@@ -23,6 +23,7 @@ Load inital DB content with `psql techempower < create-postgres.sql` (assuming y
 2. Single database query: `http://localhost:8080/db`
 3. Multiple database queries: `http://localhost:8080/queries?queries=15`
 4. Fortunes: `http://localhost:8080/fortunes`
+5. Database updates: `http://localhost:8080/updates?queries=6`
 
 The original JSON serialization test from openresty is avaiable under `http://localhost:8080/json2`.
 

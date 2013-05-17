@@ -51,3 +51,19 @@ class extends lapis.Application
           element "tr", ->
             element "td", f.id
             element "td", f.message
+
+  [test5: "/updates"]: =>
+    queries = tonumber @params.queries
+    if queries ~= nil
+      queries = 1 if queries < 1
+      queries = 500 if queries > 500
+    else
+      queries = 1
+
+    w = {}
+    -- w = World\select "id = random() * 10000 LIMIT ?", queries
+    for i = 1,queries
+      w[i] = World\find id: math.random(1,10000)
+      w[i]\update randomnumber: math.random(1,10000)
+
+    json: w
