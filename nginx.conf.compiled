@@ -1,10 +1,10 @@
 worker_processes  1;
-# error_log stderr notice;
+error_log stderr warn;
 daemon off;
 env LAPIS_ENVIRONMENT;
 
 events {
-  worker_connections 16384;
+  worker_connections 2048;
 }
 
 http {
@@ -47,6 +47,13 @@ http {
         local resp = {message = "Hello, World!"}
 
         ngx.print( encode(resp) )
+      ';
+    }
+
+    location /plaintext2 {
+      default_type text/plain;
+      content_by_lua '
+        ngx.print("Hello World")
       ';
     }
 
