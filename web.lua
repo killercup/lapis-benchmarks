@@ -190,6 +190,14 @@ return lapis.serve((function()
         return {
           json = w
         }
+      end,
+      [{
+        test6 = "/plaintext"
+      }] = function(self)
+        return self:write({
+          content_type = "text/plain",
+          layout = false
+        }, "Hello, World!")
       end
     }
     _base_0.__index = _base_0

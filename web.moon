@@ -8,14 +8,17 @@ class World extends Model
 class Fortune extends Model
 
 lapis.serve class extends lapis.Application
+  -- Test 1: JSON serialization
   [test1: "/json"]: =>
     data = message: "Hello, World!"
     json: data
 
+  -- Test 2: Single database query
   [test2: "/db"]: =>
     w = World\find id: math.random(1,10000)
     json: w
 
+  -- Test 3: Multiple database queries
   [test3: "/queries"]: =>
     queries = tonumber @params.queries
     if queries ~= nil
@@ -30,6 +33,7 @@ lapis.serve class extends lapis.Application
 
     json: w
 
+  -- Test 4: Fortunes
   [test4: "/fortunes"]: =>
     @page_title = "Fortunes"
     db = require "lapis.db"
@@ -52,6 +56,7 @@ lapis.serve class extends lapis.Application
             element "td", f.id
             element "td", f.message
 
+  -- Test 5: Database updates
   [test5: "/updates"]: =>
     queries = tonumber @params.queries
     if queries ~= nil
@@ -67,3 +72,7 @@ lapis.serve class extends lapis.Application
       w[i]\update randomnumber: math.random(1,10000)
 
     json: w
+
+  -- Test 6: Plaintext
+  [test6: "/plaintext"]: =>
+    @write {content_type: "text/plain", layout: false}, "Hello, World!"
